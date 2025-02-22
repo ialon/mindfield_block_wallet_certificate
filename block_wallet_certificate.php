@@ -41,10 +41,13 @@ class block_wallet_certificate extends block_base {
     }
 
     function get_content() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $USER, $COURSE, $DB;
 
         //note: do NOT include files at the top of this file
         require_once($CFG->libdir . '/filelib.php');
+
+        require_once($CFG->dirroot . '/blocks/wallet_certificate/classes/apple.php');
+        require_once($CFG->dirroot . '/blocks/wallet_certificate/classes/google.php');
 
         if ($this->content !== NULL) {
             return $this->content;
@@ -55,19 +58,39 @@ class block_wallet_certificate extends block_base {
 
         $text = '';
 
-        $text .= \html_writer::start_tag('div', array('class' => 'wallet-certificate-links pt-3'));
+        // Check if user has certificate
+        $issued = null;
+        $courseinfo = new \course_modinfo($COURSE, $USER->id);
+        $mods = $courseinfo->get_instances_of('coursecertificate');
 
-        // Add to Apple Wallet
-        $imgurl = $OUTPUT->image_url('apple_addtowallet', 'block_wallet_certificate');
-        $image = \html_writer::img($imgurl, get_string('apple_addtowallet', 'block_wallet_certificate'));
-        $text .= \html_writer::link('#', $image, array('class' => 'wallet-certificate d-block mb-3'));
+        foreach ($mods as $modinfo) {
+            if ($modinfo->get_user_visible()) {
+                $certificate = $DB->get_record('coursecertificate', ['id' => $modinfo->instance], '*', MUST_EXIST);
+                $issued = \mod_coursecertificate\helper::get_user_certificate($USER->id, $COURSE->id, $certificate->template);
+            }
+        }
 
-        // Add to Google Wallet
-        $imgurl = $OUTPUT->image_url('google_addtowallet', 'block_wallet_certificate');
-        $image = \html_writer::img($imgurl, get_string('google_addtowallet', 'block_wallet_certificate'));
-        $text .= \html_writer::link('#', $image, array('class' => 'wallet-certificate d-block mb-3'));
+        if ($issued) {
+            $text .= \html_writer::start_tag('div', array('class' => 'wallet-certificate-links pt-3'));
 
-        $text .= \html_writer::end_tag('div');
+            // Add to Apple Wallet
+            $apple = new apple();
+            if ($applelink = $apple->get_apple_link()) {
+                $imgurl = $OUTPUT->image_url('apple_addtowallet', 'block_wallet_certificate');
+                $image = \html_writer::img($imgurl, get_string('apple_addtowallet', 'block_wallet_certificate'));
+                $text .= \html_writer::link($applelink, $image, array('class' => 'wallet-certificate d-block mb-3'));
+            }
+
+            // Add to Google Wallet
+            $google = new google();
+            if ($googlelink = $google->get_google_link()) {
+                $imgurl = $OUTPUT->image_url('google_addtowallet', 'block_wallet_certificate');
+                $image = \html_writer::img($imgurl, get_string('google_addtowallet', 'block_wallet_certificate'));
+                $text .= \html_writer::link($googlelink, $image, array('class' => 'wallet-certificate d-block mb-3'));
+            }
+
+            $text .= \html_writer::end_tag('div');
+        }
 
         $this->content->text = $text;
 
