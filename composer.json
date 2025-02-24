@@ -1,5 +1,17 @@
 {
     "require": {
-        "pkpass/pkpass": "^2.3"
+        "pkpass/pkpass": "^2.3",
+        "google/auth": "^1.18",
+        "guzzlehttp/guzzle": "*",
+        "google/apiclient": "^2.15",
+        "google/apiclient-services": "~0.300"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Walletobjects"
+        ]
     }
 }
