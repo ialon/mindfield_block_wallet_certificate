@@ -29,7 +29,7 @@ class block_wallet_certificate extends block_base {
      * @return bool
      */
     public function has_config() {
-        return false;
+        return true;
     }
 
     function specialization() {

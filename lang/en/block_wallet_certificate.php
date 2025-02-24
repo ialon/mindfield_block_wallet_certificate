@@ -13,3 +13,14 @@ $string['blocktitle'] = 'Your certificate is ready!';
 $string['wallet_certificate:addinstance'] = 'Add a new Wallet Certificate block';
 $string['apple_addtowallet'] = 'Add to Apple Wallet';
 $string['google_addtowallet'] = 'Add to Google Wallet';
+
+// Settings
+$string['applewalletheading'] = 'Apple Wallet Configuration';
+$string['certificatepath'] = 'Certificate Path';
+$string['certificatepath_desc'] = 'Path to the certificate file (.p12) uploaded to your server.';
+$string['certificatepassword'] = 'Certificate Password';
+$string['certificatepassword_desc'] = 'Password for the certificate file.';
+$string['passtypeidentifier'] = 'Pass Type Identifier';
+$string['passtypeidentifier_desc'] = 'Pass Type Identifier from the Developer Portal.';
+$string['teamidentifier'] = 'Team Identifier';
+$string['teamidentifier_desc'] = 'Team Identifier from the Developer Portal.';
