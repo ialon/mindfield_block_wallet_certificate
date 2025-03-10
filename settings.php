@@ -51,4 +51,29 @@ if ($ADMIN->fulltree) {
         PARAM_TEXT
     );
     $settings->add($setting);
+
+    // Add heading for Google Wallet configuration
+    $setting = new admin_setting_heading('block_wallet_certificate/googlewalletheading',
+        get_string('googlewalletheading', 'block_wallet_certificate'),
+        ''
+    );
+    $settings->add($setting);
+
+    // Server path to the key file
+    $setting = new admin_setting_configtext('block_wallet_certificate/keyfilepath',
+        get_string('keyfilepath', 'block_wallet_certificate'),
+        get_string('keyfilepath_desc', 'block_wallet_certificate'),
+        '',
+        PARAM_TEXT
+    );
+    $settings->add($setting);
+
+    // Issuer ID
+    $setting = new admin_setting_configtext('block_wallet_certificate/issuerid',
+        get_string('issuerid', 'block_wallet_certificate'),
+        get_string('issuerid_desc', 'block_wallet_certificate'),
+        '',
+        PARAM_TEXT
+    );
+    $settings->add($setting);
 }

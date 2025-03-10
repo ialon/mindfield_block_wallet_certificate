@@ -24,3 +24,9 @@ $string['passtypeidentifier'] = 'Pass Type Identifier';
 $string['passtypeidentifier_desc'] = 'Pass Type Identifier from the Developer Portal.';
 $string['teamidentifier'] = 'Team Identifier';
 $string['teamidentifier_desc'] = 'Team Identifier from the Developer Portal.';
+
+$string['googlewalletheading'] = 'Google Wallet Configuration';
+$string['keyfilepath'] = 'Key File Path';
+$string['keyfilepath_desc'] = 'Path to the key file uploaded to your server.';
+$string['issuerid'] = 'Issuer ID';
+$string['issuerid_desc'] = 'Issuer ID from the Google Wallet Console.';
