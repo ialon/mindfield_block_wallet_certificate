@@ -1,0 +1,107 @@
+fulford-certification@fulford-certification.iam.gserviceaccount.com
+
+
+OBJECT DEFINITION 
+
+
+{
+  "id": "ISSUER_ID.OBJECT_ID",
+  "classId": "ISSUER_ID.GENERIC_CLASS_ID",
+  "logo": {
+    "sourceUri": {
+      "uri": "https://fulford.ca/wp-content/uploads/2019/12/cropped-logo-dark-192x192.png"
+    },
+    "contentDescription": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "LOGO_IMAGE_DESCRIPTION"
+      }
+    }
+  },
+  "cardTitle": {
+    "defaultValue": {
+      "language": "en-US",
+      "value": "Dock Mounted Crane"
+    }
+  },
+  "subheader": {
+    "defaultValue": {
+      "language": "en-US",
+      "value": "Level 1 Operator"
+    }
+  },
+  "header": {
+    "defaultValue": {
+      "language": "en-US",
+      "value": "GRISEWOOD, Randy"
+    }
+  },
+  "textModulesData": [
+    {
+      "id": "completion",
+      "header": "Completion",
+      "body": "Aug 11th, 2024"
+    },
+    {
+      "id": "expiry",
+      "header": "Expiry",
+      "body": "Aug 10th, 2025"
+    }
+  ],
+  "barcode": {
+    "type": "QR_CODE",
+    "value": "BARCODE_VALUE",
+    "alternateText": "1205726243AG"
+  },
+  "hexBackgroundColor": "#16883d",
+  "heroImage": {
+    "sourceUri": {
+      "uri": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxEQEhUTExIVFRUVFxYYFxgXFh8SFxUXGhUXFhcYFhcYHyggGBolGxgYITEhJiorLi4uFx81ODMsNygtLisBCgoKDg0OFw8QGzAfICYrLSstLSsyMC0tNys3Ky03MDc3Ky4rLjUrNS83LSsxNystNzAvMis1NS8rKy0rKy8tLf/AABEIAIUBLAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYBBAcDAv/EAEUQAAEDAgMDBwgGCAYDAAAAAAEAAgMEERIhMQUGQQciUWFxgZETMjM0QnKhshQjc7HB0RVDUlNigpLCFjVjhOHwF1Si/8QAGgEBAAMBAQEAAAAAAAAAAAAAAAEEBQMCBv/EAC0RAQACAQMDAQcDBQAAAAAAAAABAgMEESESMXHBBRNBUdHh8CKBoRQjMkJh/9oADAMBAAIRAxEAPwDuKIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAi+XvDRckAdJNgtJu14XFzY3eUc1pdhbmTbgDoSvNr1rxMvUUtPaG+ioNfv3KD9XC0AEXxEkkcRlYD4q6bMr2VEbZWHJw7weIPWCuWLU48szFJ3dcumyYoibw2kRF3cBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERYc4DM5IMqrbT2vUh7mCzLG2QuSOBuepS1Tt+nZljDj0N53x0URUbaa92JsTb6Xdzj4aLN1+aOnppk6Z/wCfZ0wZsdLb2jdl9O6qp+dcyRG4J9pp17/yULTsdC9r25Fpv+Y7FO0dbKXtJJdb2RpbjkFt1Gxi5xw2DTnnw6rLMvivmiuTFvNo4n0n0X8Grr+qtuIVnebZrXWqIxzJPOH7L+I71p7rbYNHLhcfqnnnfwnQOH49XYr3T7IY2N8ZJcH6jQA9I6/yXPdt7OdC9zHcOPSOBXvNTLp7Vzbbb9/P3WtPkpnrbDPPy8fZ0yprYom4nva1vAkgX7OlV2o39o2SNYC9wJsXhtmt688yO5RGwAa2B1LK13MF4pcJIb/CT/3LsChKnd2GLOqqmM/gj+tkPVlk3vWrGoteItWOJfO62MuC80jby60xwIBBBBzBGYI4EFfS55urvrRxPZRtErYswySV4POJyaQPNaeGeV10NW62iYTjy1yRvAovb+2m0bGuc0uxGwAsOF+KlFUOUj0MXvn5SvTox/j6L9y/xCf49i/cv8Qs7g0kb6dxcxjj5Q5loJ81vSrL+joP3Mf9A/JSInYe9LKqTybY3NOEuuSCMrdHarAvGGkjYbtYxp6WtAPwXsoBERBR+UKrkZJEGPc0Frr4XFt8+pWfd6QupoS4kksbck3Jy4lVLlI9JF7rvmVr3b9Vh+zb9ykQO8e1J55/olMbEee4G2drkYuAA1W7ursSopnPMsocHAANBLs76m/h3qG3HmD6yZx1c15HfICVfVAIiwHA8UGUREBFglAUGURYxDpQUflCq5I5IgyR7QWnzXFvHqVk3Wlc+lic4lxINyTcnnEaqq8pHpYvcPzKz7oepw9h+ZyCYREQEREHPN6t9qmCokp42MZgI5x55cC0EEA5DXrUDFV1VW6znSSnoFyPAZBWPf2Slpp2SyUxmkkbYFz8MYwG2bRqcx8FAHemoeMLS2Jn7MTfJjxGfxWfqe8xaf2ZmS0xkmLW/ZN0uw3sF5nsiHQ43d/SFNbHp6Vz8ALnm17nmtNuga+KqWzaeWY8xrnnibX8SrTs7ZD4nNfJI1hBBsOc7syVCkbXiYpx8Zn8iFrDEz/jC0xxNaLNAA6hZfa+WOBAI0K+lvRttwsijtsUgc0vETHyMHNDhcdJy4qRWvV1sUQvI9re059w1K85K1msxY6pjmJ2c12rtqeQYTIQ39lvMb4BQUOyKipNoonP6wLN73HJW3ae2aFj3Pjp/KvJvd+TAepqrO2t66qUYfKYGfsx/Vi3RlmfFZdKxv8Aqt1ePqys81/2nfw8qndKngzrqxkX+lF9bKerLTwKue5m/dHPI2jYZRhaBE+ZwLpbcCR7VtOlcbqGukdhaC5x0ABcT3DMqw7B5M9ozua9w+jNBBDnmzxxBaxuYPbZaGOflDzp8lur+3X88u+qocpHoYvfPylWfZ8L2RsbJJ5R7WgOfhwYyOOEaKscpHoYvfPyld4a725PPVnfaO+VqtK5nu7u2+qjL2zYAHFtrE6AG+R61Kf4Hl/9n/5P5qRMb8TOZSktcWnG3MGx16QtXk+ne+GQuc51pMsRLrc0dK1Nv7NdTbP8m5+M+UBvpqdMyvfk49BJ9p/Y1BblzdtbL+kcPlH28va2I2tjta2lrLpC5e3/ADL/AHH96CS5SPSRe675lI0+xHVFPA8TyR4YWjC3Q6m+qjuUj0kXuu+ZWnd/1OL7Ifcg51u1RGecRiR0dw7nN1yF1faSkGz2SSyTySNsPOzta9g3PU3sqduL6433X/KVNco9WQ2KIaElx7rAfeUGjBJV7VkdzzHC3W2g6Bl57u1bFbuXJE3HBM5zxnbzCfdIOvUp7cumEdJHbV93HrJOXwAU4oFP3Q3mdK7yE55/suORdbVruvrW3vxtWWnjYIjhLyQXcQABp0aqqb1xfR61zmZZtkHUTmfiCpjlBlxxU7x7WI+LWlSPPYW7f0yHy000hLybC98gbXOK98wV9bJ2BV01W0NJMQNy69muZxBbfXqU/uX6nF/N87l972VhhpZHDUjCP5jb7roK5trb81VN9HpSQLkYhkXdJv7LQtqDcUWvJO8v6W6A9+ZXlyb0gtLKdbhg6hbEfw8FdlA5ZvXQTQPYySUytwnATqBfMG/5q97oepw9h+ZyrHKR6WL3D8ys+6HqcPYfmcpEwiIoBERBVuUDZUU8LHyzCFkT7l5bjycMNgBxJsqZBtXZ1P6CB07h7cxs3tDB+IXR96qH6RRzxjV0brcecBib8QFyjd/cqvnsTH5Jp4yc0/0+d8FXzVmZ4hn6mLRkiaV33dB3Z2u6sp5RzWvYcgwYRhIuAB3ELzin61u7rbrCiJd5Vz3OFjlhbrfTW/eoba31Mz28L3HYcx+Xcsj2nivFKZJ8T6Nz2X1TSaX791q2PUYmlvEfcVmo2tG3S7j1ZDxVZ2XtQRyNJOWh7CvXeUeSkv7L8x+P/etRTXZY0sTTvE7T4+H0d50tZzbW+PMeqXg2gakSRg4H2uwg/j2/euebQmcHOD74gSDfM3Gq34tqGJ7Xt1ab9o4jvCsm262mgjFY2nEpltzuANsr3vbS2Q1CnDf+px75J5r38K2v9n266xj+KlUewaqp9HEcJ9p3Mb4nXuVh2dybR61Epd/Czmjvccz8FVdub81kuknkm6gR83TS51K6XubvA2vp2yZY282QdDxx7DqP+Fe0vurTtH8quT2V7msXvy3tl7FpqUWhhYzrA5x7XHM+K30RaKIiIjaBVDlI9DF75+Uq3qocpHoovfPylEvbk89Wd9o75Wq0qrcnnqzvtHfK1WlBW9/vVD77PxWrycegk+0/sCk98aN0tK8NFy2zrcTY527rqrbj7cjp8ccpwteQQ7gDaxB6OCkdEXL2/wCZf7j+9XyfeKkY3EZ2HqacRPYAqBsYmor2vAPOlLz1NvizQSvKR6SL3XfMrTu/6nF9kPuVW5SPSRe675lad3/U4vsh9yCjbi+uN91/ylSXKTEccLuBDh3gg/io3cX1xvuv+Uq77z7J+lQFg89vOZ2jh3jJB87oTB9JFbgC09oJCmVzjdTbn0N7oZgQwnPLON2huOj8lba3eiljYXCVrzbJrTck9HV3qBTd/ZA6rIHssYO/M/ipDfiIsp6Vp1aLHtDGrS3e2fJXVJnkHMDsTjwJ1DB8O5SvKT5sPvP+5qkTO5fqcX83zuWvv80mkPU9hPxH4rY3L9Ti/m+dykdqUQnifEdHi1+g6g9xsoFZ5N5QYpW8Q8HuLbfgrguV7Nq5dm1BD2nLmvb+03pafiCr7T7zUj238s1vU7mkdxUir8pHpYvcPzKz7oepw9h+ZypW+m1I6mZvkjiDG4b/ALRJvkr3u5TOipomPFnBuY6Lkm3xQSSIigEREBERAVO5QafCI5hwOB3fm38fFXFRu8VB9IppY7ZlpLfeGbfiFw1OL3uK1XfTZfd5a2ctFareZfpuz8Qzkg8ThH4t+IXLTWK1cnW3RHVeScebOMP84zb45jvWHpaRFppbtbifRuaqN6dde9efqiZ6tWfcfaDKqOWglOT2l0fVxcB1g2cOwrVr9waqSpkbGGthxXa9xywnOwaMyRp3Kz7u7g09K9srnvllabg3wNaepo17yVa0ukyUvvtx2nwr6nVYrY9t+e8bfNymo3frHTvp2Qve9ji12Ec0dBLjkARY59K6Nyd7mVVA8yyytAe2zom8+/QS7QEHovqVfrLKv4tJWk7qGXW3yV6dthERWlMWntLZkVQA2VuIA3GZGdrcFuL4lkaxpc4gNaCSTkABmSUHhs7Z8VO3BE3C0m9rk59/YtpUqblHpg44IppGN1e1ot25nTtst/am+tPBFDMWSOZOHFtmgEYbahxHSgsyha/delmdiMeFx1LDhv2jReGx962VMoiEFRGSCQ6RmFuQva91Hf8AkKEl4bT1DvJk4i1gcG2JFzY5DJBvM3JpBwee135BTVBs6GAWija3psMz2nUqGj3yp305qI2yPAc1hY1t5ATple1rcbrSpOUGCV4YyCoJuAeYLNubXdY5BBYNpbGgqSDKzEWggZkZHsK26enbGwMaLNaLAdShqbemJ9Y6jDH424ruIGHJuLpv8FGDlBgLnMbT1DywkHCwOtY2vkdEE9Qbv00D/KRx4XC4BxE665EqTVYq99IYqdlQ+KYB7yzCWgPBFzmCdMlu7U3np6aBk0hIEjQ5jALvdcB1raZXzOiDZ2psOnqc5GAu/aHNd4jXvUdDuXSNNyHu6i7L4WWrsnfuGeVkRhmjdIbMLm3DvDh16KQ3o3nh2e1hkDnF5IDW2vYDM5nTMDvQTEELY2hrGhrRoALALW2nsqGpDRKzFhuRmRa+uhXxRbWjmpxUsuWFhfbV2QN226QQQq5/5Fp8QZ9HqcZ9nAMWl9MV0FsoqRkLBHGMLW6DXU349ZXuqzXb5ww+QDopb1DQ5osAW3dhs65yK2d4966ehs1+J0jhcMYLutpc3yAQSO0dmQ1AtKwOtodCOwjMKGO5NJf9Z2Yv+F5bG35p6iUQubJDI7JokFg4nQX4E9a9tqb501NUinlD2nm3fYYG4hcE53t3IJDZ279NAcTIxiHtO5xHZfTuUooLbO9ENLLDE5r3Ga2EtsW5uDRck9anUBERAREQEREBfD5WjUhfa+SwHgEHNKncCCSqlkkqg2Jzy5rGednmQXHIZ34FWjZFFsyjH1Xkw79snE8/zHPwVgNOw+y3wC+DRRH9Wz+kLnXDSs7xDtfPkvG0zw1v07S/vmeK+m7ZpzpKzxXt+j4f3TP6Qsihi/ds/pC6OLDdoRHSRvivVszTo4FYFOwew3wC+wwDQDwQfQKIiAoveehfUUs0TPPewhvC5uDbvtbvUoiDl+7G9UdBTmmmppRK1zsg3z8R9q+h4aHIBOUmoM1PRvET48QecBbYsFmC1vu6rLp5aOhZQc83N2hGaprRU1spc1wDZhzBle55x6LacVAbvRVZNc6mkMZALi3ACZBifkCfNIF/FdislkFJ5KmQildgxCTH9bi6fZw/w2+N1HcmRP0qsyIub6W/WP8AzXR0Qc42Rf8ATsxsbc8adDGj8FE7sbIkqauqDKiWns5xuy4xDyhyOYyXXViyDnPKNROhoaeIyPlc2Q3e7Nzua8569Nu5eW+Wz5cNFVNjMkcUcWNlr2thdmOg6X6l0xEFR2ZvtDVTRRx00xJvdxaPqrjXK+XAnLJVTak09ftB8kdMaiOEFgYTgbaxbiuelxJ7h0LrDWgaBZsg5zyZVkkEktFM0tIJc0Hg4ee2+mYse4rFff8AT8ZsbANF7f6LvzXR7Ig5xyj3+m0eRNsJ0v8ArR+SxvLFJRbTbWvhdLCQMwL4CGYOwEai/SukIUHLNtVp2zUwNpoXtEZ50rhhsCQcyL2AsbZ5kr73m2a2q2wInh2B7ACRlY+ScQQeo2XT2tA0FllBxmpoaqCspaee7mwyMET7XDozIDkegdHDRdmREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREH/9k="
+    },
+    "contentDescription": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "HERO_IMAGE_DESCRIPTION"
+      }
+    }
+  }
+}
+
+
+CLASS DEFINITION 
+
+{
+  "id": "ISSUER_ID.CLASS_ID",
+  "classTemplateInfo": {
+    "cardTemplateOverride": {
+      "cardRowTemplateInfos": [
+        {
+          "twoItems": {
+            "startItem": {
+              "firstValue": {
+                "fields": [
+                  {
+                    "fieldPath": "object.textModulesData['completion']"
+                  }
+                ]
+              }
+            },
+            "endItem": {
+              "firstValue": {
+                "fields": [
+                  {
+                    "fieldPath": "object.textModulesData['expiry']"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+
