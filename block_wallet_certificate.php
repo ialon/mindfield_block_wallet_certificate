@@ -74,7 +74,7 @@ class block_wallet_certificate extends block_base {
             $text .= \html_writer::start_tag('div', array('class' => 'wallet-certificate-links pt-3'));
 
             // Add to Apple Wallet
-            $apple = new apple($issued->id);
+            $apple = new \block_wallet_certificate\apple($issued->id);
             if ($applelink = $apple->get_download_link()) {
                 $imgurl = $OUTPUT->image_url('apple_addtowallet', 'block_wallet_certificate');
                 $image = \html_writer::img($imgurl, get_string('apple_addtowallet', 'block_wallet_certificate'));
@@ -82,7 +82,7 @@ class block_wallet_certificate extends block_base {
             }
 
             // Add to Google Wallet
-            $google = new google($issued->id);
+            $google = new \block_wallet_certificate\google($issued->id);
             if ($googlelink = $google->get_download_link()) {
                 $imgurl = $OUTPUT->image_url('google_addtowallet', 'block_wallet_certificate');
                 $image = \html_writer::img($imgurl, get_string('google_addtowallet', 'block_wallet_certificate'));

@@ -15,22 +15,38 @@ require_once($CFG->dirroot . '/blocks/wallet_certificate/vendor/autoload.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 abstract class base {
-    protected $issueid;
+    protected $issue;
+
+    protected $template;
 
     protected $wallet;
 
     protected $config;
 
-    public public function __construct(int $issueid, string $wallet) {
-        $this->issueid = $issueid;
+    public function __construct(int $issueid, string $wallet) {
+        global $DB;
+
     	$this->wallet = $wallet;
         $this->config = get_config('block_wallet_certificate');
+        $this->issue = $DB->get_record('tool_certificate_issues', array('id' => $issueid), '*', MUST_EXIST);
     }
 
     abstract public function generate_pass();
 
+    public function get_template() {
+        global $DB;
+
+        if ($this->template) {
+            return $this->template;
+        }
+
+        $this->template = $DB->get_record('tool_certificate_templates', array('id' => $this->issue->templateid), '*', MUST_EXIST);
+
+        return $this->template;
+    }
+
     public function get_download_link() {
-        $url = new \moodle_url('/blocks/wallet_certificate/certificate.php', array('wallet' => $this->wallet, 'issueid' => $this->issueid));
+        $url = new \moodle_url('/blocks/wallet_certificate/certificate.php', array('wallet' => $this->wallet, 'issueid' => $this->issue->id));
         return $url->out();
     }
 }

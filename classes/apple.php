@@ -17,7 +17,7 @@ use PKPass\PKPass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 class apple extends base {
-    public public function __construct(int $issueid) {
+    public function __construct(int $issueid) {
         parent::__construct($issueid, 'apple');
     }
 
@@ -38,7 +38,7 @@ class apple extends base {
         $pass->addFile('pix/thumbnail.png');
 
         // Add certificate specific data
-        require_once(__DIR__ . '/certificates/apple/' . $type . '.php');
+        require_once(__DIR__ . '/../templates/apple/' . 'level_a' . '.php');
 
         $pass->setData($data);
 
