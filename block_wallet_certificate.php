@@ -82,12 +82,15 @@ class block_wallet_certificate extends block_base {
             }
 
             // Add to Google Wallet
+            // Commented out. Not ready for client testing
+            /*
             $google = new \block_wallet_certificate\google($issued->id);
             if ($googlelink = $google->get_download_link()) {
                 $imgurl = $OUTPUT->image_url('google_addtowallet', 'block_wallet_certificate');
                 $image = \html_writer::img($imgurl, get_string('google_addtowallet', 'block_wallet_certificate'));
                 $text .= \html_writer::link($googlelink, $image, array('class' => 'wallet-certificate d-block mb-3'));
             }
+            */
 
             $text .= \html_writer::end_tag('div');
         }

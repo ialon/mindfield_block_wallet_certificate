@@ -26,8 +26,11 @@
  use Google\Auth\Credentials\ServiceAccountCredentials;
  use Google\Client as GoogleClient;
  use Google\Service\Walletobjects;
- use Google\Service\Walletobjects\GenericObject;
- use Google\Service\Walletobjects\GenericClass;
+ use Google\Service\Walletobjects\LoyaltyPointsBalance;
+ use Google\Service\Walletobjects\LoyaltyPoints;
+ use Google\Service\Walletobjects\LoyaltyObject;
+ use Google\Service\Walletobjects\LoyaltyClass;
+ use Google\Service\Walletobjects\LatLongPoint;
  use Google\Service\Walletobjects\Barcode;
  use Google\Service\Walletobjects\ImageModuleData;
  use Google\Service\Walletobjects\LinksModuleData;
@@ -36,11 +39,13 @@
  use Google\Service\Walletobjects\LocalizedString;
  use Google\Service\Walletobjects\ImageUri;
  use Google\Service\Walletobjects\Image;
+ use Google\Service\Walletobjects\Message;
+ use Google\Service\Walletobjects\AddMessageRequest;
  use Google\Service\Walletobjects\Uri;
  // [END imports]
  
- /** Demo class for creating and managing Generic passes in Google Wallet. */
- class DemoGeneric
+ /** Demo class for creating and managing Loyalty cards in Google Wallet. */
+ class DemoLoyalty
  {
    /**
     * The Google API Client
@@ -106,7 +111,7 @@
    {
      // Check if the class exists
      try {
-       $this->service->genericclass->get("{$issuerId}.{$classSuffix}");
+       $this->service->loyaltyclass->get("{$issuerId}.{$classSuffix}");
  
        print("Class {$issuerId}.{$classSuffix} already exists!");
        return "{$issuerId}.{$classSuffix}";
@@ -119,12 +124,26 @@
      }
  
      // See link below for more information on required properties
-     // https://developers.google.com/wallet/generic/rest/v1/genericclass
-     $newClass = new GenericClass([
-       'id' => "{$issuerId}.{$classSuffix}"
+     // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyclass
+     $newClass = new LoyaltyClass([
+       'id' => "{$issuerId}.{$classSuffix}",
+       'issuerName' => 'Issuer name',
+       'reviewStatus' => 'UNDER_REVIEW',
+       'programName' => 'Program name',
+       'programLogo' => new Image([
+         'sourceUri' => new ImageUri([
+           'uri' => 'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg'
+         ]),
+         'contentDescription' => new LocalizedString([
+           'defaultValue' => new TranslatedString([
+             'language' => 'en-US',
+             'value' => 'Logo description'
+           ])
+         ])
+       ])
      ]);
  
-     $response = $this->service->genericclass->insert($newClass);
+     $response = $this->service->loyaltyclass->insert($newClass);
  
      print "Class insert response\n";
      print_r($response);
@@ -148,9 +167,10 @@
    {
      // Check if the class exists
      try {
-       $updatedClass = $this->service->genericclass->get("{$issuerId}.{$classSuffix}");
+       $updatedClass = $this->service->loyaltyclass->get("{$issuerId}.{$classSuffix}");
      } catch (Google\Service\Exception $ex) {
-       if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'classNotFound') {
+       if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'classNotFound'
+       ) {
          // Class does not exist
          print("Class {$issuerId}.{$classSuffix} not found!");
          return "{$issuerId}.{$classSuffix}";
@@ -162,28 +182,15 @@
      }
  
      // Update the class by adding a homepage
-     $newLink = new Uri([
-       'uri' => 'https://developers.google.com/wallet',
-       'description' => 'Homepage description'
-     ]);
+     $updatedClass->setHomepageUri(new Uri([
+         'uri' => 'https://developers.google.com/wallet',
+         'description' => 'Homepage description'
+       ]));
  
-     $linksModuleData = $updatedClass->getLinksModuleData();
-     if (is_null($linksModuleData)) {
-       // LinksModuleData was not set on the original object
-       $linksModuleData = new LinksModuleData([
-         'uris' => []
-       ]);
-     }
-     $uris = $linksModuleData->getUris();
-     array_push(
-       $uris,
-       $newLink
-     );
-     $linksModuleData->setUris($uris);
+     // Note: reviewStatus must be 'UNDER_REVIEW' or 'DRAFT' for updates
+     $updatedClass->setReviewStatus('UNDER_REVIEW');
  
-     $updatedClass->setLinksModuleData($linksModuleData);
- 
-     $response = $this->service->genericclass->update("{$issuerId}.{$classSuffix}", $updatedClass);
+     $response = $this->service->loyaltyclass->update("{$issuerId}.{$classSuffix}", $updatedClass);
  
      print "Class update response\n";
      print_r($response);
@@ -207,7 +214,7 @@
    {
      // Check if the class exists
      try {
-       $existingClass = $this->service->genericclass->get("{$issuerId}.{$classSuffix}");
+       $this->service->loyaltyclass->get("{$issuerId}.{$classSuffix}");
      } catch (Google\Service\Exception $ex) {
        if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'classNotFound') {
          // Class does not exist
@@ -221,30 +228,17 @@
      }
  
      // Patch the class by adding a homepage
-     $newLink = new Uri([
-       'uri' => 'https://developers.google.com/wallet',
-       'description' => 'Homepage description'
+     $patchBody = new LoyaltyClass([
+       'homepageUri' => new Uri([
+         'uri' => 'https://developers.google.com/wallet',
+         'description' => 'Homepage description'
+       ]),
+ 
+       // Note: reviewStatus must be 'UNDER_REVIEW' or 'DRAFT' for updates
+       'reviewStatus' => 'UNDER_REVIEW'
      ]);
  
-     $patchBody = new GenericClass();
- 
-     $linksModuleData = $existingClass->getLinksModuleData();
-     if (is_null($linksModuleData)) {
-       // LinksModuleData was not set on the original object
-       $linksModuleData = new LinksModuleData([
-         'uris' => []
-       ]);
-     }
-     $uris = $linksModuleData->getUris();
-     array_push(
-       $uris,
-       $newLink
-     );
-     $linksModuleData->setUris($uris);
- 
-     $patchBody->setLinksModuleData($linksModuleData);
- 
-     $response = $this->service->genericclass->patch("{$issuerId}.{$classSuffix}", $patchBody);
+     $response = $this->service->loyaltyclass->patch("{$issuerId}.{$classSuffix}", $patchBody);
  
      print "Class patch response\n";
      print_r($response);
@@ -252,6 +246,50 @@
      return $response->id;
    }
    // [END patchClass]
+ 
+   // [START addMessageClass]
+   /**
+    * Add a message to a pass class.
+    *
+    * @param string $issuerId The issuer ID being used for this request.
+    * @param string $classSuffix Developer-defined unique ID for this pass class.
+    * @param string $header The message header.
+    * @param string $body The message body.
+    *
+    * @return string The pass class ID: "{$issuerId}.{$classSuffix}"
+    */
+   public function addClassMessage(string $issuerId, string $classSuffix, string $header, string $body)
+   {
+     // Check if the class exists
+     try {
+       $this->service->loyaltyclass->get("{$issuerId}.{$classSuffix}");
+     } catch (Google\Service\Exception $ex) {
+       if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'classNotFound') {
+         // Class does not exist
+         print("Class {$issuerId}.{$classSuffix} not found!");
+         return "{$issuerId}.{$classSuffix}";
+       } else {
+         // Something else went wrong...
+         print_r($ex);
+         return "{$issuerId}.{$classSuffix}";
+       }
+     }
+ 
+     $message = new AddMessageRequest([
+       'message' => new Message([
+         'header' => $header,
+         'body' => $body
+       ])
+     ]);
+ 
+     $response = $this->service->loyaltyclass->addmessage("{$issuerId}.{$classSuffix}", $message);
+ 
+     print "Class addMessage response\n";
+     print_r($response);
+ 
+     return $response->id;
+   }
+   // [END addMessageClass]
  
    // [START createObject]
    /**
@@ -267,7 +305,7 @@
    {
      // Check if the object exists
      try {
-       $this->service->genericobject->get("{$issuerId}.{$objectSuffix}");
+       $this->service->loyaltyobject->get("{$issuerId}.{$objectSuffix}");
  
        print("Object {$issuerId}.{$objectSuffix} already exists!");
        return "{$issuerId}.{$objectSuffix}";
@@ -280,8 +318,8 @@
      }
  
      // See link below for more information on required properties
-     // https://developers.google.com/wallet/generic/rest/v1/genericobject
-     $newObject = new GenericObject([
+     // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyobject
+     $newObject = new LoyaltyObject([
        'id' => "{$issuerId}.{$objectSuffix}",
        'classId' => "{$issuerId}.{$classSuffix}",
        'state' => 'ACTIVE',
@@ -337,33 +375,22 @@
          'type' => 'QR_CODE',
          'value' => 'QR code value'
        ]),
-       'cardTitle' => new LocalizedString([
-         'defaultValue' => new TranslatedString([
-           'language' => 'en-US',
-           'value' => 'Generic card title'
+       'locations' => [
+         new LatLongPoint([
+           'latitude' => 37.424015499999996,
+           'longitude' =>  -122.09259560000001
          ])
-       ]),
-       'header' => new LocalizedString([
-         'defaultValue' => new TranslatedString([
-           'language' => 'en-US',
-           'value' => 'Generic header'
-         ])
-       ]),
-       'hexBackgroundColor' => '#4285f4',
-       'logo' => new Image([
-         'sourceUri' => new ImageUri([
-           'uri' => 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/pass_google_logo.jpg'
-         ]),
-         'contentDescription' => new LocalizedString([
-           'defaultValue' => new TranslatedString([
-             'language' => 'en-US',
-             'value' => 'Generic card logo'
-           ])
+       ],
+       'accountId' => 'Account ID',
+       'accountName' => 'Account name',
+       'loyaltyPoints' => new LoyaltyPoints([
+         'balance' => new LoyaltyPointsBalance([
+           'int' => 800
          ])
        ])
      ]);
  
-     $response = $this->service->genericobject->insert($newObject);
+     $response = $this->service->loyaltyobject->insert($newObject);
  
      print "Object insert response\n";
      print_r($response);
@@ -387,7 +414,7 @@
    {
      // Check if the object exists
      try {
-       $updatedObject = $this->service->genericobject->get("{$issuerId}.{$objectSuffix}");
+       $updatedObject = $this->service->loyaltyobject->get("{$issuerId}.{$objectSuffix}");
      } catch (Google\Service\Exception $ex) {
        if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'resourceNotFound') {
          print("Object {$issuerId}.{$objectSuffix} not found!");
@@ -421,7 +448,7 @@
  
      $updatedObject->setLinksModuleData($linksModuleData);
  
-     $response = $this->service->genericobject->update("{$issuerId}.{$objectSuffix}", $updatedObject);
+     $response = $this->service->loyaltyobject->update("{$issuerId}.{$objectSuffix}", $updatedObject);
  
      print "Object update response\n";
      print_r($response);
@@ -443,7 +470,7 @@
    {
      // Check if the object exists
      try {
-       $existingObject = $this->service->genericobject->get("{$issuerId}.{$objectSuffix}");
+       $existingObject = $this->service->loyaltyobject->get("{$issuerId}.{$objectSuffix}");
      } catch (Google\Service\Exception $ex) {
        if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'resourceNotFound') {
          print("Object {$issuerId}.{$objectSuffix} not found!");
@@ -461,7 +488,7 @@
        'description' => 'New link description'
      ]);
  
-     $patchBody = new GenericObject();
+     $patchBody = new LoyaltyObject();
  
      $linksModuleData = $existingObject->getLinksModuleData();
      if (is_null($linksModuleData)) {
@@ -479,7 +506,7 @@
  
      $patchBody->setLinksModuleData($linksModuleData);
  
-     $response = $this->service->genericobject->patch("{$issuerId}.{$objectSuffix}", $patchBody);
+     $response = $this->service->loyaltyobject->patch("{$issuerId}.{$objectSuffix}", $patchBody);
  
      print "Object patch response\n";
      print_r($response);
@@ -504,7 +531,7 @@
    {
      // Check if the object exists
      try {
-       $this->service->genericobject->get("{$issuerId}.{$objectSuffix}");
+       $this->service->loyaltyobject->get("{$issuerId}.{$objectSuffix}");
      } catch (Google\Service\Exception $ex) {
        if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'resourceNotFound') {
          print("Object {$issuerId}.{$objectSuffix} not found!");
@@ -517,11 +544,11 @@
      }
  
      // Patch the object, setting the pass as expired
-     $patchBody = new GenericObject([
+     $patchBody = new LoyaltyObject([
        'state' => 'EXPIRED'
      ]);
  
-     $response = $this->service->genericobject->patch("{$issuerId}.{$objectSuffix}", $patchBody);
+     $response = $this->service->loyaltyobject->patch("{$issuerId}.{$objectSuffix}", $patchBody);
  
      print "Object expiration response\n";
      print_r($response);
@@ -529,6 +556,49 @@
      return $response->id;
    }
    // [END expireObject]
+ 
+   // [START addMessageObject]
+   /**
+    * Add a message to a pass object.
+    *
+    * @param string $issuerId The issuer ID being used for this request.
+    * @param string $objectSuffix Developer-defined unique ID for this pass object.
+    * @param string $header The message header.
+    * @param string $body The message body.
+    *
+    * @return string The pass class ID: "{$issuerId}.{$classSuffix}"
+    */
+   public function addObjectMessage(string $issuerId, string $objectSuffix, string $header, string $body)
+   {
+     // Check if the object exists
+     try {
+       $this->service->loyaltyobject->get("{$issuerId}.{$objectSuffix}");
+     } catch (Google\Service\Exception $ex) {
+       if (!empty($ex->getErrors()) && $ex->getErrors()[0]['reason'] == 'resourceNotFound') {
+         print("Object {$issuerId}.{$objectSuffix} not found!");
+         return "{$issuerId}.{$objectSuffix}";
+       } else {
+         // Something else went wrong...
+         print_r($ex);
+         return "{$issuerId}.{$objectSuffix}";
+       }
+     }
+ 
+     $message = new AddMessageRequest([
+       'message' => new Message([
+         'header' => $header,
+         'body' => $body
+       ])
+     ]);
+ 
+     $response = $this->service->loyaltyobject->addmessage("{$issuerId}.{$objectSuffix}", $message);
+ 
+     print "Object addMessage response\n";
+     print_r($response);
+ 
+     return $response->id;
+   }
+   // [END addMessageObject]
  
    // [START jwtNew]
    /**
@@ -548,14 +618,28 @@
    public function createJwtNewObjects(string $issuerId, string $classSuffix, string $objectSuffix)
    {
      // See link below for more information on required properties
-     // https://developers.google.com/wallet/generic/rest/v1/genericclass
-     $newClass = new GenericClass([
+     // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyclass
+     $newClass = new LoyaltyClass([
        'id' => "{$issuerId}.{$classSuffix}",
+       'issuerName' => 'Issuer name',
+       'reviewStatus' => 'UNDER_REVIEW',
+       'programName' => 'Program name',
+       'programLogo' => new Image([
+         'sourceUri' => new ImageUri([
+           'uri' => 'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg'
+         ]),
+         'contentDescription' => new LocalizedString([
+           'defaultValue' => new TranslatedString([
+             'language' => 'en-US',
+             'value' => 'Logo description'
+           ])
+         ])
+       ])
      ]);
  
      // See link below for more information on required properties
-     // https://developers.google.com/wallet/generic/rest/v1/genericobject
-     $newObject = new GenericObject([
+     // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyobject
+     $newObject = new LoyaltyObject([
        'id' => "{$issuerId}.{$objectSuffix}",
        'classId' => "{$issuerId}.{$classSuffix}",
        'state' => 'ACTIVE',
@@ -611,28 +695,17 @@
          'type' => 'QR_CODE',
          'value' => 'QR code value'
        ]),
-       'cardTitle' => new LocalizedString([
-         'defaultValue' => new TranslatedString([
-           'language' => 'en-US',
-           'value' => 'Generic card title'
+       'locations' => [
+         new LatLongPoint([
+           'latitude' => 37.424015499999996,
+           'longitude' =>  -122.09259560000001
          ])
-       ]),
-       'header' => new LocalizedString([
-         'defaultValue' => new TranslatedString([
-           'language' => 'en-US',
-           'value' => 'Generic header'
-         ])
-       ]),
-       'hexBackgroundColor' => '#4285f4',
-       'logo' => new Image([
-         'sourceUri' => new ImageUri([
-           'uri' => 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/pass_google_logo.jpg'
-         ]),
-         'contentDescription' => new LocalizedString([
-           'defaultValue' => new TranslatedString([
-             'language' => 'en-US',
-             'value' => 'Generic card logo'
-           ])
+       ],
+       'accountId' => 'Account ID',
+       'accountName' => 'Account name',
+       'loyaltyPoints' => new LoyaltyPoints([
+         'balance' => new LoyaltyPointsBalance([
+           'int' => 800
          ])
        ])
      ]);
@@ -647,10 +720,10 @@
        'origins' => ['www.example.com'],
        'typ' => 'savetowallet',
        'payload' => [
-         'genericClasses' => [
+         'loyaltyClasses' => [
            $newClass
          ],
-         'genericObjects' => [
+         'loyaltyObjects' => [
            $newObject
          ]
        ]
@@ -796,8 +869,8 @@
        $objectSuffix = preg_replace('/[^\w.-]/i', '_', uniqid());
  
        // See link below for more information on required properties
-       // https://developers.google.com/wallet/generic/rest/v1/genericobject
-       $batchObject = new GenericObject([
+       // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyobject
+       $batchObject = new LoyaltyObject([
          'id' => "{$issuerId}.{$objectSuffix}",
          'classId' => "{$issuerId}.{$classSuffix}",
          'state' => 'ACTIVE',
@@ -853,33 +926,22 @@
            'type' => 'QR_CODE',
            'value' => 'QR code value'
          ]),
-         'cardTitle' => new LocalizedString([
-           'defaultValue' => new TranslatedString([
-             'language' => 'en-US',
-             'value' => 'Generic card title'
+         'locations' => [
+           new LatLongPoint([
+             'latitude' => 37.424015499999996,
+             'longitude' =>  -122.09259560000001
            ])
-         ]),
-         'header' => new LocalizedString([
-           'defaultValue' => new TranslatedString([
-             'language' => 'en-US',
-             'value' => 'Generic header'
-           ])
-         ]),
-         'hexBackgroundColor' => '#4285f4',
-         'logo' => new Image([
-           'sourceUri' => new ImageUri([
-             'uri' => 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/pass_google_logo.jpg'
-           ]),
-           'contentDescription' => new LocalizedString([
-             'defaultValue' => new TranslatedString([
-               'language' => 'en-US',
-               'value' => 'Generic card logo'
-             ])
+         ],
+         'accountId' => 'Account ID',
+         'accountName' => 'Account name',
+         'loyaltyPoints' => new LoyaltyPoints([
+           'balance' => new LoyaltyPointsBalance([
+             'int' => 800
            ])
          ])
        ]);
  
-       $batch->add($this->service->genericobject->insert($batchObject));
+       $batch->add($this->service->loyaltyobject->insert($batchObject));
      }
  
      // Make the batch request

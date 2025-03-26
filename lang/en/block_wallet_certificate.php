@@ -33,3 +33,5 @@ $string['issuerid_desc'] = 'Issuer ID from the Google Wallet Console.';
 
 // Errors
 $string['invalidwallet'] = 'Invalid wallet type: {$a}';
+$string['classnotfound'] = 'Class not found: {$a}';
+$string['objectnotfound'] = 'Object not found: {$a}';
