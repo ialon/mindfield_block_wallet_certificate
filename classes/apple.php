@@ -21,6 +21,104 @@ class apple extends base {
         parent::__construct($issueid, 'apple');
     }
 
+    public function get_mapped_data(&$data, &$pass = null) {
+        $issuer = $this->get_issuer_data();
+        $user = $this->get_user_data();
+        $course = $this->get_course_data();
+        $certificate = $this->get_certificate_data();
+
+        $data['organizationName'] = $issuer['name'];
+        $data['logoText'] = $issuer['name'];
+        $data['description'] = $course['certificatetype'];
+        $data['serialNumber'] = $certificate['code'];
+
+        // User personal data
+        $data['generic']['primaryFields'][] = [
+            'key' => 'fullname',
+            'label' => $user['firstname'],
+            'value' => $user['lastname']
+        ];
+
+        // Certificate and Crane Type
+        $craneorprogram = $course['programname'] ?: $course['cranetype'];
+        $data['generic']['secondaryFields'][] = [
+            'key' => 'certficateDetails',
+            'label' => $course['certificatetype'],
+            'value' => $craneorprogram
+        ];
+        if ($course['programname'] && $course['displaycranetype']) {
+            $data['generic']['backFields'][] = [
+                'key' => 'craneType',
+                'label' => $course['cranetypelabel'],
+                'value' => $course['cranetype']
+            ];
+        }
+
+        // Completion or Issue date
+        if ($course['displaycompletedon'] && $course['completedon']) {
+            $data['generic']['auxiliaryFields'][] = [
+                'key' => 'completedOn',
+                'label' => $course['completedonlabel'],
+                'value' => $course['completedon']
+            ];
+        } else {
+            $data['generic']['auxiliaryFields'][] = [
+                'key' => 'issueDate',
+                'label' => $course['issuedonlabel'],
+                'value' => $certificate['issued']
+            ];
+        }
+
+        // Expiration date
+        if ($certificate['expiry'] > 0) {
+            $data['generic']['auxiliaryFields'][] = [
+                'key' => 'expiryDate',
+                'label' => $course['expiresonlabel'],
+                'value' => $certificate['expiry']
+            ];
+        }
+
+        // Back fields
+        $data['generic']['backFields'][] = [
+            'key' => 'operatorAddress',
+            'label' => $course['operatoraddresslabel'],
+            'value' => $user['address']
+        ];
+
+        // Duration dates
+        if ($certificate['expiry'] > 0) {
+            $data['RelevantDates'] = [
+                'startDate' => $course['completedon'],
+                'endDate' => $certificate['expiry']
+            ];
+        }
+
+        // Back of card text
+        if (!empty($course['backtext'])) {
+            $data['generic']['backFields'][] = [
+                'key' => 'backText',
+                'label' => $course['backtextlabel'],
+                'value' => $course['backtext']
+            ];
+        }
+
+        // QR Code
+        $data['barcode']['message'] = $certificate['verifyurl'];
+        $data['barcode']['altText'] = $certificate['code'];
+
+        // Styling
+        $data['backgroundColor'] = $course['backgroundcolor'];
+        $data['foregroundColor'] = $course['textcolor'];
+        $data['labelColor'] = $course['textcolor'];
+
+        // Add images
+        $pass->addFile('pix/logo.png');
+        $pass->addFile('pix/thumbnail.png');
+        // Required but not used
+        $pass->addFile('pix/icon.png');
+        $pass->addFile('pix/icon@2x.png');
+    }
+
     public function generate_pass() {
         $pass = new PKPass($this->config->certificatepath, $this->config->certificatepassword);
 
@@ -35,10 +133,7 @@ class apple extends base {
             ]
         ];
 
-        $pass->addFile('pix/thumbnail.png');
-
-        // Add certificate specific data
-        require_once(__DIR__ . '/../templates/apple/' . 'level_a' . '.php');
+        $this->get_mapped_data($data, $pass);
 
         $pass->setData($data);
 

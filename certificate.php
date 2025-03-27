@@ -11,11 +11,12 @@
 namespace block_wallet_certificate;
 
 require_once(__DIR__ . '/../../config.php');
-
 require_once($CFG->dirroot . '/blocks/wallet_certificate/vendor/autoload.php');
 
 $wallet = required_param('wallet', PARAM_TEXT);
 $issueid = required_param('issueid', PARAM_INT);
+
+$PAGE->set_context(\context_system::instance());
 
 $classname = '\\block_wallet_certificate\\' . $wallet;
 if (class_exists($classname)) {

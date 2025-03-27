@@ -19,6 +19,13 @@ class google extends base {
         parent::__construct($issueid, 'google');
     }
 
+    public function get_mapped_data(&$data, &$pass = null) {
+        $issuer = $this->get_issuer_data();
+        $user = $this->get_user_data();
+        $course = $this->get_course_data();
+        $certificate = $this->get_certificate_data();
+    }
+
     public function generate_pass() {
         // Your Issuer account ID
         $issuerId = $this->config->issuerid;
