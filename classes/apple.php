@@ -26,6 +26,7 @@ class apple extends base {
         $user = $this->get_user_data();
         $course = $this->get_course_data();
         $certificate = $this->get_certificate_data();
+        $cohort = $this->get_cohort_data($course['cohortidnumber']);
 
         $data['organizationName'] = $issuer['name'];
         $data['logoText'] = $issuer['name'];
@@ -93,6 +94,22 @@ class apple extends base {
             ];
         }
 
+        // Company name and address
+        if ($course['displaycompanyname'] && !empty($cohort['name'])) {
+            $data['generic']['backFields'][] = [
+                'key' => 'companyName',
+                'label' => $course['companynamelabel'],
+                'value' => $cohort['name']
+            ];
+        }
+        if ($course['displaycompanyaddress'] && !empty($cohort['address'])) {
+            $data['generic']['backFields'][] = [
+                'key' => 'companyAddress',
+                'label' => $course['companyaddresslabel'],
+                'value' => $cohort['address']
+            ];
+        }
+
         // Back of card text
         if (!empty($course['backtext'])) {
             $data['generic']['backFields'][] = [
@@ -112,9 +129,13 @@ class apple extends base {
         $data['labelColor'] = $course['textcolor'];
 
         // Add images
-        $pass->addFile('pix/logo.png');
-        $pass->addFile('pix/thumbnail.png');
-        // Required but not used
+        if (empty($course['logourl'])) {
+            $pass->addFile('pix/logo.png');
+        } else {
+            $pass->addRemoteFile($course['logourl'], 'logo.png');
+        }
+        $pass->addRemoteFile($user['photourl'], 'thumbnail.png');
+        // Required but not dynamic
         $pass->addFile('pix/icon.png');
         $pass->addFile('pix/icon@2x.png');
     }

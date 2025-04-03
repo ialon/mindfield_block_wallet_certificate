@@ -6,6 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/completion/completion_completion.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
 require_once($CFG->dirroot . '/blocks/wallet_certificate/vendor/autoload.php');
 
 /**
@@ -49,6 +50,7 @@ abstract class base {
         global $USER, $PAGE;
 
         $userpicture = new \core\output\user_picture($USER);
+        $userpicture->size = 101;
         $user = [
             'firstname' => $USER->firstname,
             'lastname' => $USER->lastname,
@@ -102,6 +104,11 @@ abstract class base {
             'logourl' => $customfields['logourl'] ?? '',
             'backgroundcolor' => $customfields['backgroundcolor'] ?? '#0D860B',
             'textcolor' => $customfields['foregroundcolor'] ?? '#FFFFFF',
+            'cohortidnumber' => $customfields['cohortidnumber'] ?? false,
+            'displaycompanyname' => $customfields['displaycompanyname'] ?? false,
+            'companynamelabel' => $customfields['companynamelabel'] ?? '',
+            'displaycompanyaddress' => $customfields['displaycompanyaddress'] ?? false,
+            'companyaddresslabel' => $customfields['companyaddresslabel'] ?? '',
         ];
 
         return $coursedata;
@@ -121,6 +128,53 @@ abstract class base {
         ];
 
         return $certificate;
+    }
+
+    public function get_cohort_data($cohortidnumber = 0) {
+        global $USER;
+
+        $cohort = [];
+
+        $cohorts = cohort_get_user_cohorts($USER->id, true);
+
+        if ($cohorts) {
+            foreach ($cohorts as $c) {
+                if ($c->idnumber != $cohortidnumber) {
+                    continue;
+                }
+
+                $address = [];
+                
+                /** @var \core_customfield\data_controller $cf */
+                foreach ($c->customfields as $cf) {
+                    switch ($cf->get_field()->get('shortname')) {
+                        case 'co_addr1':
+                            $address[0] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                            break;
+                        case 'co_addr2':
+                            $address[1] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                            break;
+                        case 'co_city':
+                            $address[2] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                            break;
+                        case 'co_prov':
+                            $address[3] = $cf->export_value() ?? '';
+                            break;
+                        case 'co_postalcode':
+                            $address[4] = $cf->export_value() ?? '';
+                            break;
+                    }
+                }
+
+                $cohort = [
+                    'id' => $c->id,
+                    'name' => $c->name,
+                    'address' => implode(' ', $address)
+                ];
+            }
+        }
+
+        return $cohort;
     }
 
     /**
