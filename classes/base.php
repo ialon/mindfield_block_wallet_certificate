@@ -54,7 +54,7 @@ abstract class base {
         $user = [
             'firstname' => $USER->firstname,
             'lastname' => $USER->lastname,
-            'address' => $USER->address,
+            'address' => $USER->address . ($USER->city ? ', ' . $USER->city : ''),
             'photourl' => $userpicture->get_url($PAGE)->out(false)
         ];
 
@@ -89,6 +89,7 @@ abstract class base {
             'summary' => $course->summary,
             'completedon' => $completiondate,
             // Custom fields
+            'displayoperatoraddress' => $customfields['displayoperatoraddress'] ?? false,
             'operatoraddresslabel' => $customfields['operatoraddresslabel'] ?? '',
             'displaycompletedon' => $customfields['displaycompletedon'] ?? false,
             'completedonlabel' => $customfields['completedonlabel'] ?? '',
@@ -104,7 +105,6 @@ abstract class base {
             'logourl' => $customfields['logourl'] ?? '',
             'backgroundcolor' => $customfields['backgroundcolor'] ?? '#0D860B',
             'textcolor' => $customfields['foregroundcolor'] ?? '#FFFFFF',
-            'cohortidnumber' => $customfields['cohortidnumber'] ?? false,
             'displaycompanyname' => $customfields['displaycompanyname'] ?? false,
             'companynamelabel' => $customfields['companynamelabel'] ?? '',
             'displaycompanyaddress' => $customfields['displaycompanyaddress'] ?? false,
@@ -130,48 +130,53 @@ abstract class base {
         return $certificate;
     }
 
-    public function get_cohort_data($cohortidnumber = 0) {
-        global $USER;
+    public function get_cohort_data() {
+        global $DB, $USER;
 
         $cohort = [];
+        $timeadded = 0;
 
         $cohorts = cohort_get_user_cohorts($USER->id, true);
 
-        if ($cohorts) {
-            foreach ($cohorts as $c) {
-                if ($c->idnumber != $cohortidnumber) {
-                    continue;
-                }
+        foreach ($cohorts as $c) {
+            // Get cohort membership
+            $cohortmembership = $DB->get_record('cohort_members', array('cohortid' => $c->id, 'userid' => $USER->id), '*', MUST_EXIST);
 
-                $address = [];
-                
-                /** @var \core_customfield\data_controller $cf */
-                foreach ($c->customfields as $cf) {
-                    switch ($cf->get_field()->get('shortname')) {
-                        case 'co_addr1':
-                            $address[0] = $cf->export_value() ? $cf->export_value() . ',' : '';
-                            break;
-                        case 'co_addr2':
-                            $address[1] = $cf->export_value() ? $cf->export_value() . ',' : '';
-                            break;
-                        case 'co_city':
-                            $address[2] = $cf->export_value() ? $cf->export_value() . ',' : '';
-                            break;
-                        case 'co_prov':
-                            $address[3] = $cf->export_value() ?? '';
-                            break;
-                        case 'co_postalcode':
-                            $address[4] = $cf->export_value() ?? '';
-                            break;
-                    }
-                }
-
-                $cohort = [
-                    'id' => $c->id,
-                    'name' => $c->name,
-                    'address' => implode(' ', $address)
-                ];
+            // Check if it is the most recent cohort
+            if ($cohortmembership->timeadded < $timeadded) {
+                continue;
             }
+
+            $timeadded = $cohortmembership->timeadded;
+
+            $address = [];
+            
+            /** @var \core_customfield\data_controller $cf */
+            foreach ($c->customfields as $cf) {
+                switch ($cf->get_field()->get('shortname')) {
+                    case 'co_addr1':
+                        $address[0] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                        break;
+                    case 'co_addr2':
+                        $address[1] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                        break;
+                    case 'co_city':
+                        $address[2] = $cf->export_value() ? $cf->export_value() . ',' : '';
+                        break;
+                    case 'co_prov':
+                        $address[3] = $cf->export_value() ?? '';
+                        break;
+                    case 'co_postalcode':
+                        $address[4] = $cf->export_value() ?? '';
+                        break;
+                }
+            }
+
+            $cohort = [
+                'id' => $c->id,
+                'name' => $c->name,
+                'address' => implode(' ', $address)
+            ];
         }
 
         return $cohort;

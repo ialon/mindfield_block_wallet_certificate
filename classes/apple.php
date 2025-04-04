@@ -26,7 +26,7 @@ class apple extends base {
         $user = $this->get_user_data();
         $course = $this->get_course_data();
         $certificate = $this->get_certificate_data();
-        $cohort = $this->get_cohort_data($course['cohortidnumber']);
+        $cohort = $this->get_cohort_data();
 
         $data['organizationName'] = $issuer['name'];
         $data['logoText'] = $issuer['name'];
@@ -80,11 +80,13 @@ class apple extends base {
         }
 
         // Back fields
-        $data['generic']['backFields'][] = [
-            'key' => 'operatorAddress',
-            'label' => $course['operatoraddresslabel'],
-            'value' => $user['address']
-        ];
+        if ($course['displayoperatoraddress'] && !empty($user['address'])) {
+            $data['generic']['backFields'][] = [
+                'key' => 'operatorAddress',
+                'label' => $course['operatoraddresslabel'],
+                'value' => $user['address']
+            ];
+        }
 
         // Duration dates
         if ($certificate['expiry'] > 0) {
